@@ -568,6 +568,14 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         `
         }
+        <button class="share-button" data-activity="${name}" aria-label="Share activity">
+          🔗 Share
+        </button>
+      </div>
+      <div class="share-panel hidden" id="share-panel-${name.replace(/\s+/g, '-')}">
+        <a class="share-link share-twitter" href="#" target="_blank" rel="noopener noreferrer" aria-label="Share on X (Twitter)">𝕏</a>
+        <a class="share-link share-whatsapp" href="#" target="_blank" rel="noopener noreferrer" aria-label="Share on WhatsApp">💬</a>
+        <button class="share-link share-copy" aria-label="Copy link">📋</button>
       </div>
     `;
 
@@ -587,7 +595,64 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
+    // Add click handler for share button
+    const shareButton = activityCard.querySelector(".share-button");
+    shareButton.addEventListener("click", () => {
+      shareActivity(name, details, activityCard);
+    });
+
+    // Add click handlers for share panel links
+    const sharePanel = activityCard.querySelector(".share-panel");
+    const twitterLink = sharePanel.querySelector(".share-twitter");
+    const whatsappLink = sharePanel.querySelector(".share-whatsapp");
+    const copyButton = sharePanel.querySelector(".share-copy");
+
+    const { shareText, shareUrl } = getShareData(name, details);
+
+    twitterLink.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+    whatsappLink.href = `https://wa.me/?text=${encodeURIComponent(shareText + " " + shareUrl)}`;
+
+    copyButton.addEventListener("click", () => {
+      navigator.clipboard.writeText(shareText + "\n" + shareUrl).then(() => {
+        copyButton.textContent = "✅";
+        setTimeout(() => { copyButton.textContent = "📋"; }, 2000);
+      }).catch(() => {
+        copyButton.textContent = "❌";
+        setTimeout(() => { copyButton.textContent = "📋"; }, 2000);
+      });
+    });
+
     activitiesList.appendChild(activityCard);
+  }
+
+  // Build shareable text and URL for an activity
+  function getShareData(name, details) {
+    return {
+      shareText: `Check out "${name}" at Mergington High School! ${details.description}`,
+      shareUrl: `${window.location.origin}${window.location.pathname}`,
+    };
+  }
+
+  // Function to share an activity using Web Share API or fallback panel
+  function shareActivity(name, details, cardElement) {
+    const { shareText, shareUrl } = getShareData(name, details);
+
+    if (navigator.share) {
+      navigator.share({
+        title: name,
+        text: shareText,
+        url: shareUrl,
+      }).catch((err) => {
+        // User cancelled or error — silently ignore
+        if (err.name !== "AbortError") {
+          console.error("Share failed:", err);
+        }
+      });
+    } else {
+      // Toggle the fallback share panel
+      const sharePanel = cardElement.querySelector(".share-panel");
+      sharePanel.classList.toggle("hidden");
+    }
   }
 
   // Event listeners for search and filter

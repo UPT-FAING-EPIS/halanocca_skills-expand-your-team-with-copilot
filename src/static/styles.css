@@ -612,6 +612,56 @@ footer {
   }
 }
 
+/* Social sharing */
+.activity-card-actions {
+  flex-direction: column;
+  gap: 6px;
+}
+
+.share-button {
+  background-color: var(--background);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  width: 100%;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.share-button:hover {
+  background-color: var(--border);
+}
+
+.share-panel {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 6px 0 2px;
+}
+
+.share-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--background);
+  border: 1px solid var(--border);
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.15s;
+  color: var(--text-primary);
+}
+
+.share-link:hover {
+  background-color: var(--border-focus);
+  transform: scale(1.1);
+}
+
 /* User controls in header */
 #user-controls {
   position: absolute;
