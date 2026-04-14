@@ -14,12 +14,14 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.classList.add("dark-mode");
     darkModeToggle.textContent = "☀️";
     darkModeToggle.title = "Switch to light mode";
+    darkModeToggle.setAttribute("aria-label", "Switch to light mode");
   }
   darkModeToggle.addEventListener("click", () => {
     document.body.classList.toggle("dark-mode");
     const isDark = document.body.classList.contains("dark-mode");
     darkModeToggle.textContent = isDark ? "☀️" : "🌙";
-    darkModeToggle.title = isDark ? "Switch to light mode" : "Toggle dark mode";
+    darkModeToggle.title = isDark ? "Switch to light mode" : "Switch to dark mode";
+    darkModeToggle.setAttribute("aria-label", isDark ? "Switch to light mode" : "Switch to dark mode");
     localStorage.setItem("darkMode", isDark ? "enabled" : "disabled");
   });
 
